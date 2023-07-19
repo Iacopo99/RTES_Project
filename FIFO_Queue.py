@@ -1,9 +1,9 @@
 from Node import Node
 
 
-class Queue:
+class FIFO_Queue:
     length = 0
-    current = None
+    current = Node()
 
     def __init__(self, head=None):
         self.head = Node(head)
@@ -13,20 +13,24 @@ class Queue:
     def __str__(self):
         self.current = self.head
         content = []
-        while self.current:
-            content.append(self.current.node)
-            self.current = self.current.next_node
+        if self.length:
+            while self.current is not None:
+                content.append(self.current.get_node())
+                self.current = self.current.get_next()
         self.current = self.head
         return str(content)
 
     def empty(self):
-        if self.length == 0:
+        if not self.length:
             return True
         else:
             return False
 
     def get_head(self):
         return self.head
+
+    def get_length(self):
+        return self.length
 
     # def set_head(self, new_head):
     #    self.head = new_head
@@ -48,8 +52,13 @@ class Queue:
         self.head = self.head.next_node
         return el
 
-    def push(self, new_head):
+    def push(self, new_node):
+        if not self.length:
+            self.head = Node(new_node)
+        else:
+            old_head = self.head
+            while self.head.get_next() is not None:
+                self.head = self.head.get_next()
+            self.head.set_next(new_node)
+            self.head = old_head
         self.length += 1
-        old_head = self.head
-        self.head = Node(new_head)
-        self.head.set_next(old_head)
