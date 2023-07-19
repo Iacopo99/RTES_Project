@@ -1,7 +1,8 @@
 from Node import Node
+from threading import Thread
 
 
-class FIFO_Queue:
+class FifoQueue:
     length = 0
     current = Node()
 
