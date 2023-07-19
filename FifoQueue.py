@@ -1,5 +1,4 @@
 from Node import Node
-from threading import Semaphore
 from Sem import Sem
 
 
@@ -62,4 +61,3 @@ class FifoQueue:
             self.head.set_next(new_node)
             self.head = old_head
         self.length += 1
-
