@@ -1,8 +1,10 @@
 from Node import Node
-from threading import Thread
+from threading import Semaphore
+from Sem import Sem
 
 
 class FifoQueue:
+    s = Sem()
     length = 0
     current = Node()
 
@@ -33,9 +35,6 @@ class FifoQueue:
     def get_length(self):
         return self.length
 
-    # def set_head(self, new_head):
-    #    self.head = new_head
-
     def get_element(self, index):
         if index <= self.length & index > 0:
             self.current = self.head
@@ -63,3 +62,4 @@ class FifoQueue:
             self.head.set_next(new_node)
             self.head = old_head
         self.length += 1
+
