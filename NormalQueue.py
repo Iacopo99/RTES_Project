@@ -46,10 +46,13 @@ class NormalQueue:
             return None
 
     def pop_not_safe(self):
-        self.length -= 1
-        el = self.head.node
-        self.head = self.head.next_node
-        return el
+        if self.length:
+            self.length -= 1
+            el = self.head.node
+            self.head = self.head.next_node
+            return el
+        else:
+            return None
 
     def push_not_safe(self, new_node):
         if not self.length:

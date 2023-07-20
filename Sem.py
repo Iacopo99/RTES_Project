@@ -9,18 +9,19 @@ class Sem:
 
     def before_reading(self, i):
         self.mtx.acquire()
-        if self.nw > 0 | self.nbw > 0:
+        if (self.nw > 0) | (self.nbw > 0):
             self.nbr += 1
-            print('thread reader {} blocked'.format(i))
+            print('thread reader {} BLOCKED'.format(i))
         else:
             self.nr += 1
             self.private_r.release()
         self.mtx.release()
+        self.private_r.acquire()
 
     def after_reading(self):
         self.mtx.acquire()
         self.nr -= 1
-        if self.nbw > 0 & self.nr == 0:
+        if (self.nbw > 0) & (self.nr == 0):
             self.nbw -= 1
             self.nw += 1
             self.private_w.release()
@@ -28,16 +29,18 @@ class Sem:
 
     def before_writing(self, i):
         self.mtx.acquire()
-        if self.nr > 0 | self.nw > 0:
+        if (self.nr > 0) | (self.nw > 0):
             self.nbw += 1
-            print('thread writer {} blocked'.format(i))
+            print('thread writer {} BLOCKED'.format(i))
         else:
             self.nw += 1
             self.private_w.release()
         self.mtx.release()
+        self.private_w.acquire()
 
     def after_writing(self):
         self.mtx.acquire()
+        self.nw -= 1
         if self.nbr > 0:
             while self.nbr > 0:
                 self.nbr -= 1
