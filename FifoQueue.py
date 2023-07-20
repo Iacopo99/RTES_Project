@@ -1,63 +1,45 @@
-from Node import Node
 from Sem import Sem
+from NormalQueue import NormalQueue
 
 
 class FifoQueue:
     s = Sem()
-    length = 0
-    current = Node()
 
     def __init__(self, head=None):
-        self.head = Node(head)
-        if head:
-            self.length += 1
+        self.nq = NormalQueue(head)
 
-    def __str__(self):
-        self.current = self.head
-        content = []
-        if self.length:
-            while self.current is not None:
-                content.append(self.current.get_node())
-                self.current = self.current.get_next()
-        self.current = self.head
-        return str(content)
+    def __str__(self, i):
+        self.s.before_reading(i)
+        ris = self.nq.str_not_safe()
+        self.s.after_reading()
+        return ris
 
-    def empty(self):
-        if not self.length:
-            return True
-        else:
-            return False
+    def empty(self, i):
+        self.s.before_reading(i)
+        ris = self.nq.empty_not_safe()
+        self.s.after_reading()
+        return ris
 
-    def get_head(self):
-        return self.head
+    def get_head(self, i):
+        self.s.before_reading(i)
+        ris = self.nq.get_head_not_safe()
+        self.s.after_reading()
+        return ris
 
-    def get_length(self):
-        return self.length
+    def get_length(self, i):
+        self.s.before_reading(i)
+        ris = self.nq.get_length_not_safe()
+        self.s.after_reading()
+        return ris
 
-    def get_element(self, index):
-        if index <= self.length & index > 0:
-            self.current = self.head
-            c = 1
-            while c < index:
-                c += 1
-                self.current = self.current.next_node
-            return self.current.node
-        else:
-            return None
+    def pop(self, i):
+        self.s.before_writing(i)
+        ris = self.nq.pop_not_safe()
+        self.s.after_writing()
+        return ris
 
-    def pop(self):
-        self.length -= 1
-        el = self.head.node
-        self.head = self.head.next_node
-        return el
+    def push(self, new_node, i):
+        self.s.before_writing(i)
+        self.nq.push_not_safe(new_node)
+        self.s.after_writing()
 
-    def push(self, new_node):
-        if not self.length:
-            self.head = Node(new_node)
-        else:
-            old_head = self.head
-            while self.head.get_next() is not None:
-                self.head = self.head.get_next()
-            self.head.set_next(new_node)
-            self.head = old_head
-        self.length += 1

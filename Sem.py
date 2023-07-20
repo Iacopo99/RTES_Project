@@ -7,10 +7,11 @@ class Sem:
     private_r = Semaphore(value=0)
     nw = nbw = nr = nbr = 0
 
-    def before_reading(self):
+    def before_reading(self, i):
         self.mtx.acquire()
         if self.nw > 0 | self.nbw > 0:
             self.nbr += 1
+            print('thread reader {} blocked'.format(i))
         else:
             self.nr += 1
             self.private_r.release()
@@ -25,10 +26,11 @@ class Sem:
             self.private_w.release()
         self.mtx.release()
 
-    def before_writing(self):
+    def before_writing(self, i):
         self.mtx.acquire()
         if self.nr > 0 | self.nw > 0:
             self.nbw += 1
+            print('thread writer {} blocked'.format(i))
         else:
             self.nw += 1
             self.private_w.release()
