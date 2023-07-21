@@ -2,11 +2,11 @@ import random
 import time
 
 from NormalQueue import NormalQueue
-from FifoSem import Sem
+from FifoSem import FifoSem
 
 
 class FifoQueue:
-    s = Sem()
+    s = FifoSem()
 
     def __init__(self, head=None):
         """

@@ -1,11 +1,8 @@
 from threading import Semaphore
+from Sem import Sem
 
 
-class Sem:
-    mtx = Semaphore()
-    private_w = {}
-    private_r = {}
-    nw = nbw = nr = nbr = 0
+class FifoSem(Sem):
 
     def before_reading(self, i=-1):
         s_r = Semaphore(value=0)
