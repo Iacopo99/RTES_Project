@@ -1,5 +1,5 @@
 from Node import Node
-from Sem import Sem
+from FifoSem import Sem
 
 
 class NormalQueue:

@@ -2,7 +2,7 @@ import random
 import time
 
 from NormalQueue import NormalQueue
-from Sem import Sem
+from FifoSem import Sem
 
 
 class FifoQueue:
@@ -22,7 +22,7 @@ class FifoQueue:
         self.s.after_reading()
         return ris
 
-    def empty(self, i):
+    def empty(self, i=-1):
         """
         Returns a boolean variable. True if the queue is empty (no elements), False otherwise
         :param i: The index of thread that is running the function
@@ -34,7 +34,7 @@ class FifoQueue:
         self.s.after_reading()
         return ris
 
-    def get_head(self, i):
+    def get_head(self, i=-1):
         """
         Returns the first object in the queue
         :param i: The index of thread that is running the function
@@ -46,7 +46,7 @@ class FifoQueue:
         self.s.after_reading()
         return ris
 
-    def get_length(self, i):
+    def get_length(self, i=-1):
         """
         Returns the number of elements in the queue
         :param i: The index of thread that is running the function
@@ -58,7 +58,7 @@ class FifoQueue:
         self.s.after_reading()
         return ris
 
-    def pop(self, i):
+    def pop(self, i=-1):
         """
         Select the first item in the queue and deletes the object from it
         :param i: The index of thread that is running the function
@@ -70,7 +70,7 @@ class FifoQueue:
         self.s.after_writing()
         return ris
 
-    def push(self, new_node, i):
+    def push(self, new_node, i=-1):
         """
         Add an item at the end of the fifo Queue
         :param new_node: It is the item to add in the queue
@@ -81,7 +81,3 @@ class FifoQueue:
         self.nq.push_not_safe(new_node)
         time.sleep(float(random.randint(0, 1000) / 1000))
         self.s.after_writing()
-
-
-fq = FifoQueue()
-help(fq.push)
