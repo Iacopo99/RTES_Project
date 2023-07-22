@@ -1,9 +1,7 @@
 from Node import Node
-from FifoSem import Sem
 
 
 class NormalQueue:
-    s = Sem()
     length = 0
     current = Node()
 

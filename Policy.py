@@ -1,12 +1,11 @@
+from Sem import Sem
 import random
 import time
-
 from NormalQueue import NormalQueue
-from FifoSem import FifoSem
 
 
-class FifoQueue:
-    s = FifoSem()
+class Policy:
+    s = Sem()
 
     def __init__(self, head=None):
         """
@@ -16,7 +15,7 @@ class FifoQueue:
         self.nq = NormalQueue(head)
 
     def __str__(self):
-        self.s.before_reading(None)
+        self.s.before_reading(-1)
         ris = self.nq.str_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
         self.s.after_reading()

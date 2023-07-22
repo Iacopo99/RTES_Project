@@ -23,14 +23,7 @@ class FifoSem(Sem):
         self.mtx.acquire()
         self.nr -= 1
         if (self.nbw > 0) & (self.nr == 0):
-            self.nbw -= 1
-            self.nw += 1
-            s_w = self.private_w.pop(1)
-            s_w.release()
-            new = {}
-            for i in self.private_w.keys():
-                new[i - 1] = self.private_w[i]
-            self.private_w = new
+            self.free_writer()
         self.mtx.release()
 
     def before_writing(self, i=-1):
@@ -62,12 +55,15 @@ class FifoSem(Sem):
                     new[i - 1] = self.private_r[i]
                 self.private_r = new
         elif self.nbw > 0:
-            self.nbw -= 1
-            self.nw += 1
-            s_w = self.private_w.pop(1)
-            s_w.release()
-            new = {}
-            for i in self.private_w.keys():
-                new[i - 1] = self.private_w[i]
-            self.private_w = new
+            self.free_writer()
         self.mtx.release()
+
+    def free_writer(self):
+        self.nbw -= 1
+        self.nw += 1
+        s_w = self.private_w.pop(1)
+        s_w.release()
+        new = {}
+        for i in self.private_w.keys():
+            new[i - 1] = self.private_w[i]
+        self.private_w = new
