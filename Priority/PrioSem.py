@@ -1,5 +1,5 @@
 from threading import Semaphore
-from ImplementSem import ImplementSem
+from Generals.ImplementSem import ImplementSem
 
 
 class PrioSem(ImplementSem):
