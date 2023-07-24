@@ -15,68 +15,63 @@ class Policy:
         self.nq = NormalQueue(head)
 
     def __str__(self):
-        self.s.before_reading(-1)
+        self.s.before_reading()
         ris = self.nq.str_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
         self.s.after_reading()
         return ris
 
-    def empty(self, i=-1):
+    def empty(self):
         """
         Returns a boolean variable. True if the queue is empty (no elements), False otherwise
-        :param i: The index of thread that is running the function
         :return: Boolean variable
         """
-        self.s.before_reading(i)
+        self.s.before_reading()
         ris = self.nq.empty_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
         self.s.after_reading()
         return ris
 
-    def get_head(self, i=-1):
+    def get_head(self):
         """
         Returns the first object in the queue
-        :param i: The index of thread that is running the function
         :return: Any possible type of object
         """
-        self.s.before_reading(i)
+        self.s.before_reading()
         ris = self.nq.get_head_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
         self.s.after_reading()
         return ris
 
-    def get_length(self, i=-1):
+    def get_length(self):
         """
         Returns the number of elements in the queue
-        :param i: The index of thread that is running the function
         :return: An integer the represent the length
         """
-        self.s.before_reading(i)
+        self.s.before_reading()
         ris = self.nq.get_length_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
         self.s.after_reading()
         return ris
 
-    def pop(self, i=-1):
+    def pop(self):
         """
         Select the first item in the queue and deletes the object from it
-        :param i: The index of thread that is running the function
         :return: The first object of the queue
         """
-        self.s.before_writing(i)
+        self.s.before_writing()
         ris = self.nq.pop_not_safe()
         time.sleep(float(random.randint(0, 1000) / 1000))
         self.s.after_writing()
         return ris
 
-    def push(self, new_node, i=-1):
+    def push(self, new_node):
         """
         Add an item at the end of the fifo Queue
         :param new_node: It is the item to add in the queue
-        :param i: The index of thread that is running the function
         :return: Nothing
         """
-        self.s.before_writing(i)
+        self.s.before_writing()
         self.nq.push_not_safe(new_node)
         time.sleep(float(random.randint(0, 1000) / 1000))
         self.s.after_writing()
