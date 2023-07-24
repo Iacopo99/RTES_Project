@@ -1,15 +1,14 @@
 from threading import Semaphore
-from Sem import Sem
+from ImplementSem import ImplementSem
 
 
-class PrioSem(Sem):
+class PrioSem(ImplementSem):
     lower_bound = 0
     upper_bound = 4
     def_prio = round((lower_bound + upper_bound) / 2)
 
-    nbr_p = nbw_p = []
-    for i in range(lower_bound, upper_bound):
-        nbr_p.append(0)
+    nbw_p = []
+    for i in range(lower_bound, upper_bound + 1):
         nbw_p.append(0)
 
     def __init__(self, prio_type=1):
@@ -27,30 +26,6 @@ class PrioSem(Sem):
             raise ValueError(
                 'prio variable must be an integer between {} (higher) an {} (lower)'.format(self.lower_bound,
                                                                                             self.upper_bound))
-
-    def before_reading(self, i=-1, prio=def_prio):
-        s_r = Semaphore(value=0)
-        self.checking_prio(prio)
-
-        self.mtx.acquire()
-        if (self.nw > 0) | (self.nbw > 0):
-            self.nbr += 1
-            c = self.nbr
-            if i != -1:
-                print('thread reader {} BLOCKED'.format(i))
-            self.private_r[c] = s_r
-        else:
-            self.nr += 1
-            s_r.release()
-        self.mtx.release()
-        s_r.acquire()
-
-    def after_reading(self):
-        self.mtx.acquire()
-        self.nr -= 1
-        if (self.nbw > 0) & (self.nr == 0):
-            self.free_writer()
-        self.mtx.release()
 
     def before_writing(self, i=-1, prio=def_prio):
         s_w = Semaphore(value=0)
@@ -74,7 +49,7 @@ class PrioSem(Sem):
         self.mtx.acquire()
         self.nw -= 1
         if self.nbr > 0:
-            for i in list(self.private_r.keys()):
+            while self.nbr > 0:
                 self.nbr -= 1
                 self.nr += 1
                 s_r = self.private_r.pop(1)
@@ -83,24 +58,6 @@ class PrioSem(Sem):
                 for i in self.private_r.keys():
                     new[i - 1] = self.private_r[i]
                 self.private_r = new
-                """
-                for i in range(self.lower_bound, self.upper_bound):
-                    c = self.nbr_p[i]
-                    for j in range(1, c):
-                        if (j, i) in self.private_r:
-                            t_p = i
-                            s_r = self.private_r.pop((j, i))
-                            s_r.release()
-                            self.nbr_p[i] -= 1
-                        else:
-                            break
-                new = {}
-                for i in list(self.private_r.keys()):
-                    if i[0] == t_p:
-                        new[(i[0] - 1, t_p)] = self.private_r[(i[0], t_p)]
-                    else:
-                        new[i] = self.private_r[(i[0], t_p)]
-                self.private_r = new"""
         elif self.nbw > 0:
             self.free_writer()
         self.mtx.release()
