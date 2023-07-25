@@ -1,5 +1,5 @@
 from generals.Policy import Policy
-from PrioSem import PrioSem
+from priority.PrioSem import PrioSem
 import random
 import time
 

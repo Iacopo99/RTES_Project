@@ -1,11 +1,11 @@
-from Sem import Sem
+from generals.ImplementSem import ImplementSem
 import random
 import time
-from NormalQueue import NormalQueue
+from generals.NormalQueue import NormalQueue
 
 
 class Policy:
-    s = Sem()
+    s = ImplementSem()
 
     def __init__(self, head=None):
         """

@@ -1,4 +1,4 @@
-from FifoSem import FifoSem
+from fifo.FifoSem import FifoSem
 from generals.Policy import Policy
 import time
 import random

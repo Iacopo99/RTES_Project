@@ -1,5 +1,5 @@
 from threading import Semaphore
-from Sem import Sem
+from generals.Sem import Sem
 
 
 class ImplementSem(Sem):

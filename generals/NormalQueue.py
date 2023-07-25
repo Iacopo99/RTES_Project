@@ -1,4 +1,4 @@
-from Node import Node
+from generals.Node import Node
 
 
 class NormalQueue:
