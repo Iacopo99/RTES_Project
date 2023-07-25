@@ -1,5 +1,5 @@
 from FifoSem import FifoSem
-from Generals.Policy import Policy
+from generals.Policy import Policy
 import time
 import random
 

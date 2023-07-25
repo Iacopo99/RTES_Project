@@ -1,5 +1,5 @@
 from threading import Semaphore
-from Generals.ImplementSem import ImplementSem
+from generals.ImplementSem import ImplementSem
 
 
 class PrioSem(ImplementSem):
@@ -73,7 +73,6 @@ class PrioSem(ImplementSem):
                 s_w.release()
                 self.nbw_p[i] -= 1
                 break
-
         new = {}
         for i in list(self.private_w.keys()):
             if i[1] == t_p:

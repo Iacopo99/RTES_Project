@@ -1,5 +1,5 @@
 from threading import Semaphore
-from Generals.ImplementSem import ImplementSem
+from generals.ImplementSem import ImplementSem
 
 
 class FifoSem(ImplementSem):
