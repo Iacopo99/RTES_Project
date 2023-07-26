@@ -5,7 +5,7 @@ from generals.NormalQueue import NormalQueue
 
 
 class Policy:
-    s = ImplementSem()
+    __s = ImplementSem()
 
     def __init__(self, head=None):
         """
@@ -15,10 +15,10 @@ class Policy:
         self.nq = NormalQueue(head)
 
     def __str__(self):
-        self.s.before_reading()
+        self.__s.before_reading()
         ris = self.nq.str_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.s.after_reading()
+        self.__s.after_reading()
         return ris
 
     def empty(self):
@@ -26,10 +26,10 @@ class Policy:
         Returns a boolean variable. True if the queue is empty (no elements), False otherwise
         :return: Boolean variable
         """
-        self.s.before_reading()
+        self.__s.before_reading()
         ris = self.nq.empty_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.s.after_reading()
+        self.__s.after_reading()
         return ris
 
     def get_head(self):
@@ -37,10 +37,10 @@ class Policy:
         Returns the first object in the queue
         :return: Any possible type of object
         """
-        self.s.before_reading()
+        self.__s.before_reading()
         ris = self.nq.get_head_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.s.after_reading()
+        self.__s.after_reading()
         return ris
 
     def get_length(self):
@@ -48,10 +48,10 @@ class Policy:
         Returns the number of elements in the queue
         :return: An integer the represent the length
         """
-        self.s.before_reading()
+        self.__s.before_reading()
         ris = self.nq.get_length_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.s.after_reading()
+        self.__s.after_reading()
         return ris
 
     def pop(self):
@@ -59,10 +59,10 @@ class Policy:
         Select the first item in the queue and deletes the object from it
         :return: The first object of the queue
         """
-        self.s.before_writing()
+        self.__s.before_writing()
         ris = self.nq.pop_not_safe()
         time.sleep(float(random.randint(0, 1000) / 1000))
-        self.s.after_writing()
+        self.__s.after_writing()
         return ris
 
     def push(self, new_node):
@@ -71,7 +71,7 @@ class Policy:
         :param new_node: It is the item to add in the queue
         :return: Nothing
         """
-        self.s.before_writing()
+        self.__s.before_writing()
         self.nq.push_not_safe(new_node)
         time.sleep(float(random.randint(0, 1000) / 1000))
-        self.s.after_writing()
+        self.__s.after_writing()

@@ -2,63 +2,52 @@ from generals.Node import Node
 
 
 class NormalQueue:
-    length = 0
-    current = Node()
+    __length = 0
+    __current = Node()
 
     def __init__(self, head=None):
-        self.head = Node(head)
+        self.__head = Node(head)
         if head:
-            self.length += 1
+            self.__length += 1
 
     def str_not_safe(self):
-        self.current = self.head
+        self.__current = self.__head
         content = []
-        if self.length:
-            while self.current is not None:
-                content.append(self.current.get_node())
-                self.current = self.current.get_next()
-        self.current = self.head
+        if self.__length:
+            while self.__current is not None:
+                content.append(self.__current.get_node())
+                self.__current = self.__current.get_next()
+        self.__current = self.__head
         return str(content)
 
     def empty_not_safe(self):
-        if not self.length:
+        if not self.__length:
             return True
         else:
             return False
 
     def get_head_not_safe(self):
-        return self.head
+        return self.__head
 
     def get_length_not_safe(self):
-        return self.length
-
-    def get_element(self, index):
-        if index <= self.length & index > 0:
-            self.current = self.head
-            c = 1
-            while c < index:
-                c += 1
-                self.current = self.current.next_node
-            return self.current.node
-        else:
-            return None
+        return self.__length
 
     def pop_not_safe(self):
-        if self.length:
-            self.length -= 1
-            el = self.head.node
-            self.head = self.head.next_node
+        if self.__length:
+            self.__length -= 1
+            el = self.__head.node
+            self.__head = self.__head.next_node
             return el
         else:
             return None
 
     def push_not_safe(self, new_node):
-        if not self.length:
-            self.head = Node(new_node)
+        if not self.__length:
+            self.__head = Node(new_node)
         else:
-            old_head = self.head
-            while self.head.get_next() is not None:
-                self.head = self.head.get_next()
-            self.head.set_next(new_node)
-            self.head = old_head
-        self.length += 1
+            old_head = self.__head
+            while self.__head.get_next() is not None:
+                self.__head = self.__head.get_next()
+            self.__head.set_next(new_node)
+            self.__head = old_head
+        self.__length += 1
