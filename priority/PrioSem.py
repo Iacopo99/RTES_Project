@@ -31,55 +31,52 @@ class PrioSem(ImplementSem):
         s_w = Semaphore(value=0)
         self.checking_prio(prio)
 
-        self.__mtx.acquire()
-        if (self.__nr > 0) | (self.__nw > 0):
-            self.__nbw += 1
+        self.mtx.acquire()
+        if (self.nr > 0) | (self.nw > 0):
+            self.nbw += 1
             self.__nbw_p[prio] += 1
             c = self.__nbw_p[prio]
             if i != -1:
                 print('thread writer {} BLOCKED'.format(i))
             self.private_w[(c, prio)] = s_w
         else:
-            self.__nw += 1
+            self.nw += 1
             s_w.release()
-        self.__mtx.release()
+        self.mtx.release()
         s_w.acquire()
 
     def after_writing(self):
-        self.__mtx.acquire()
-        self.__nw -= 1
-        if self.__nbr > 0:
-            while self.__nbr > 0:
-                self.__nbr -= 1
-                self.__nr += 1
+        self.mtx.acquire()
+        self.nw -= 1
+        if self.nbr > 0:
+            while self.nbr > 0:
+                self.nbr -= 1
+                self.nr += 1
                 s_r = self.private_r.pop(1)
                 s_r.release()
                 new = {}
                 for i in self.private_r.keys():
                     new[i - 1] = self.private_r[i]
                 self.private_r = new
-        elif self.__nbw > 0:
+        elif self.nbw > 0:
             self.__free_writer()
-        self.__mtx.release()
+        self.mtx.release()
 
     def __free_writer(self):
-        self.__nbw -= 1
-        self.__nw += 1
+        self.nbw -= 1
+        self.nw += 1
         t_p = -1
         for i in range(self.__lower_bound, self.__upper_bound + 1):
-            if (1, i) in self.__private_w:
+            if (1, i) in self.private_w:
                 t_p = i
-                s_w = self.__private_w.pop((1, i))
+                s_w = self.private_w.pop((1, i))
                 s_w.release()
                 self.__nbw_p[i] -= 1
                 break
         new = {}
-        for i in list(self.__private_w.keys()):
+        for i in list(self.private_w.keys()):
             if i[1] == t_p:
-                new[(i[0] - 1, t_p)] = self.__private_w[(i[0], t_p)]
+                new[(i[0] - 1, t_p)] = self.private_w[(i[0], t_p)]
             else:
-                new[i] = self.__private_w[i]
+                new[i] = self.private_w[i]
         self.private_w = new
-
-    def aging_priority(self):
-        pass

@@ -3,6 +3,7 @@ from generals.Policy import Policy
 import time
 import random
 
+
 class FifoPolicy(Policy):
     __s = FifoSem()
 

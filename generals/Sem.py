@@ -2,10 +2,10 @@ from threading import Semaphore
 
 
 class Sem:
-    __mtx = Semaphore()
-    __private_w = {}
-    __private_r = {}
-    __nw = __nbw = __nr = __nbr = 0
+    mtx = Semaphore()
+    private_w = {}
+    private_r = {}
+    nw = nbw = nr = nbr = 0
 
     def before_reading(self):
         pass
