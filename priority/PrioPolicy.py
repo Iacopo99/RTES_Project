@@ -7,21 +7,21 @@ import time
 class PrioPolicy(Policy):
     __s = PrioSem()
 
-    def empty(self, i=-1, prio=__s.def_prio):
+    def empty(self, i=-1):
         self.__s.before_reading(i)
         ris = self.nq.empty_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
         self.__s.after_reading()
         return ris
 
-    def get_head(self, i=-1, prio=__s.def_prio):
+    def get_head(self, i=-1):
         self.__s.before_reading(i)
         ris = self.nq.get_head_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
         self.__s.after_reading()
         return ris
 
-    def get_length(self, i=-1, prio=__s.def_prio):
+    def get_length(self, i=-1):
         self.__s.before_reading(i)
         ris = self.nq.get_length_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))

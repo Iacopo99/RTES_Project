@@ -23,8 +23,8 @@ class ImplementSem(Sem):
         self.mtx.acquire()
         self.nr -= 1
         if (self.nbw > 0) & (self.nr == 0):
-            self.__free_writer()
+            self.free_writer()
         self.mtx.release()
 
-    def __free_writer(self):
+    def free_writer(self):
         pass
