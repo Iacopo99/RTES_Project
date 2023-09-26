@@ -76,6 +76,6 @@ class RRSem:
         self.mtx.release()
 
     def change_thread(self, t):
-        if t >= self.q:
+        if t >= (self.q * 0.85):
             return True
         return False
