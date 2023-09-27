@@ -7,7 +7,6 @@ class RRSem:
     running = {}
     nt = nb = 0
     stop_event = threading.Event()
-    # c = 0
     check_th = 0
     idt = 0
     thread_started = False

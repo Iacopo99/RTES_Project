@@ -14,44 +14,34 @@ class RRPolicy(Policy):
         self.q = q
         self.s = RRSem(q)
 
-    def empty(self, i=-1):
-        return self.general_reading(self.nq.empty_not_safe, i)
-
-    def get_head(self, i=-1):
-        return self.general_reading(self.nq.get_head_not_safe, i)
-
-    def get_length(self, i=-1):
-        return self.general_reading(self.nq.get_length_not_safe, i)
-
-    def general_reading(self, func, i):
-        self.s.before(i)
-        start = time.time()
-        ris = func()
-        time.sleep(float(random.randint(0, 300) / 1000))
-        end = time.time()
-        t = self.calculate_t(i, end - start)
-        print('funz eseguita in {} secondi'.format(t))
-        self.s.after(t, i)
-        return ris
-
-    def general_writing(self, func, i, node=None):
+    def general_function(self, func, i, node=None):
         self.s.before(i)
         start = time.time()
         if node is None:
             ris = func()
         else:
             ris = func(node)
-        time.sleep(float(random.randint(0, 1000) / 1000))
+        time.sleep(float(random.randint(0, 300) / 1000))
         end = time.time()
         t = self.calculate_t(i, end - start)
+        print('{} seconds to execute the operation by the thread {}'.format(t, i))
         self.s.after(t, i)
         return ris
 
+    def empty(self, i=-1):
+        return self.general_function(self.nq.empty_not_safe, i)
+
+    def get_head(self, i=-1):
+        return self.general_function(self.nq.get_head_not_safe, i)
+
+    def get_length(self, i=-1):
+        return self.general_function(self.nq.get_length_not_safe, i)
+
     def pop(self, i=-1):
-        return self.general_writing(self.nq.pop_not_safe, i)
+        return self.general_function(self.nq.pop_not_safe, i)
 
     def push(self, new_node, i=-1):
-        self.general_writing(self.nq.push_not_safe, i, new_node)
+        self.general_function(self.nq.push_not_safe, i, new_node)
 
     def calculate_t(self, i, t):
         if i in self.thread_time:

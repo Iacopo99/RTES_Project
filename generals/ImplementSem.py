@@ -26,5 +26,22 @@ class ImplementSem(Sem):
             self.free_writer()
         self.mtx.release()
 
+    def after_writing(self):
+        self.mtx.acquire()
+        self.nw -= 1
+        if self.nbr > 0:
+            while self.nbr > 0:
+                self.nbr -= 1
+                self.nr += 1
+                s_r = self.private_r.pop(1)
+                s_r.release()
+                new = {}
+                for i in self.private_r.keys():
+                    new[i - 1] = self.private_r[i]
+                self.private_r = new
+        elif self.nbw > 0:
+            self.free_writer()
+        self.mtx.release()
+
     def free_writer(self):
         pass

@@ -26,44 +26,28 @@ class Policy:
         Returns a boolean variable. True if the queue is empty (no elements), False otherwise
         :return: Boolean variable
         """
-        self.__s.before_reading()
-        ris = self.nq.empty_not_safe()
-        time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_reading()
-        return ris
+        pass
 
     def get_head(self):
         """
         Returns the first object in the queue
         :return: Any possible type of object
         """
-        self.__s.before_reading()
-        ris = self.nq.get_head_not_safe()
-        time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_reading()
-        return ris
+        pass
 
     def get_length(self):
         """
         Returns the number of elements in the queue
         :return: An integer the represent the length
         """
-        self.__s.before_reading()
-        ris = self.nq.get_length_not_safe()
-        time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_reading()
-        return ris
+        pass
 
     def pop(self):
         """
         Select the first item in the queue and deletes the object from it
         :return: The first object of the queue
         """
-        self.__s.before_writing()
-        ris = self.nq.pop_not_safe()
-        time.sleep(float(random.randint(0, 1000) / 1000))
-        self.__s.after_writing()
-        return ris
+        pass
 
     def push(self, new_node):
         """
@@ -71,7 +55,4 @@ class Policy:
         :param new_node: It is the item to add in the queue
         :return: Nothing
         """
-        self.__s.before_writing()
-        self.nq.push_not_safe(new_node)
-        time.sleep(float(random.randint(0, 1000) / 1000))
-        self.__s.after_writing()
+        pass
