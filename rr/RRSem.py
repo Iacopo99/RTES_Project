@@ -3,19 +3,20 @@ import threading
 
 class RRSem:
     mtx = threading.Semaphore()
-    __blocked = []
-    running = {}
+    blocked = []                    # list of private semaphores blocked
+    running = {}                    # true if thread i didn't complete q and it has other operations to do
     nt = nb = 0
-    stop_event = threading.Event()
-    check_th = 0
-    idt = 0
+    stop_event = threading.Event()  # event that stops the checking existence of the running thread
+    check_th = 0                    # checking thread
+    idt = 0                         # running thread id that finished his q
     thread_started = False
 
-    def __init__(self, q):
+    def __init__(self, q, multiple_queues=False):
         self.q = q
-        self.check_th = threading.Thread(target=self.main_t)
+        self.multiple_queues = multiple_queues
+        self.check_th = threading.Thread(target=self.check_ending_thread)
 
-    def main_t(self):
+    def check_ending_thread(self):
         find = False
         while not self.stop_event.is_set():
             for i in threading.enumerate():
@@ -23,6 +24,7 @@ class RRSem:
                     find = True
             if find is False:
                 self.change_runner()
+                del self.running[self.idt]
                 break
             find = False
         self.stop_event.clear()
@@ -36,7 +38,7 @@ class RRSem:
             self.nb += 1
             if i != -1:
                 print('thread {} BLOCKED'.format(i))
-            self.__blocked.append(s_r)
+            self.blocked.append(s_r)
         else:
             self.nt += 1
             s_r.release()
@@ -48,33 +50,38 @@ class RRSem:
     def after(self, t, i):
         self.mtx.acquire()
         self.nt -= 1
+        ris = False
         if self.change_thread(t):
             self.running[i] = False
-            if self.nb > 0:
-                s_r = self.__blocked.pop(0)
-                self.nb -= 1
-                self.nt += 1
-                s_r.release()
+            if not self.multiple_queues:
+                self.release_blocked()
+            else:
+                ris = True
         else:
             self.idt = i
             self.running[i] = True
             try:
                 self.check_th.start()
-                self.check_th = threading.Thread(target=self.main_t)
+                self.check_th = threading.Thread(target=self.check_ending_thread)
             except Exception:
                 raise RuntimeError('ERROR starting checking thread')
         self.mtx.release()
+        if self.multiple_queues:
+            return ris
 
     def change_runner(self):
         self.mtx.acquire()
-        if self.nb > 0:
-            s_r = self.__blocked.pop(0)
-            self.nb -= 1
-            self.nt += 1
-            s_r.release()
+        self.release_blocked()
         self.mtx.release()
 
     def change_thread(self, t):
-        if t >= (self.q * 0.85):
+        if t >= self.q:
             return True
         return False
+
+    def release_blocked(self):
+        if self.nb > 0:
+            s_r = self.blocked.pop(0)
+            self.nb -= 1
+            self.nt += 1
+            s_r.release()

@@ -1,7 +1,8 @@
 import random
-from rr.RRSem import RRSem
-from generals.Policy import Policy
 import time
+
+from generals.Policy import Policy
+from rr.RRSem import RRSem
 
 
 class RRPolicy(Policy):
@@ -9,10 +10,12 @@ class RRPolicy(Policy):
     end = 0
     thread_time = {}
 
-    def __init__(self, head=None, q=3):
-        super().__init__(head)
+    def __init__(self, head=None, q=0.3, multiple_queues=False):
+        if not multiple_queues:
+            super().__init__(head)
         self.q = q
-        self.s = RRSem(q)
+        self.multiple_queues = multiple_queues
+        self.s = RRSem(q, multiple_queues)
 
     def general_function(self, func, i, node=None):
         self.s.before(i)
