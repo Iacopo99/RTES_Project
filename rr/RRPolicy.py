@@ -15,10 +15,10 @@ class RRPolicy(Policy):
             super().__init__(head)
         self.q = q
         self.multiple_queues = multiple_queues
-        self.s = RRSem(q, multiple_queues)
+        self.sem = RRSem(q, multiple_queues)
 
     def general_function(self, func, i, node=None):
-        self.s.before(i)
+        self.sem.before(i)
         start = time.time()
         if node is None:
             ris = func()
@@ -28,7 +28,7 @@ class RRPolicy(Policy):
         end = time.time()
         t = self.calculate_t(i, end - start)
         print('{} seconds to execute the operation by the thread {}'.format(t, i))
-        self.s.after(t, i)
+        self.sem.after(t, i)
         return ris
 
     def empty(self, i=-1):

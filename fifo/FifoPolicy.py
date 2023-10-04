@@ -5,13 +5,13 @@ import random
 
 
 class FifoPolicy(Policy):
-    __s = FifoSem()
+    sem = FifoSem()
 
     def general_reader(self, func, i=-1):
-        self.__s.before_reading(i)
+        self.sem.before_reading(i)
         ris = func()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_reading()
+        self.sem.after_reading()
         return ris
 
     def empty(self, i=-1):
@@ -24,13 +24,13 @@ class FifoPolicy(Policy):
         return self.general_reader(self.nq.get_length_not_safe, i)
 
     def general_writer(self, func, i=-1, node=None):
-        self.__s.before_writing(i)
+        self.sem.before_writing(i)
         if node is None:
             ris = func()
         else:
             ris = func(node)
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_writing()
+        self.sem.after_writing()
         return ris
 
     def pop(self, i=-1):

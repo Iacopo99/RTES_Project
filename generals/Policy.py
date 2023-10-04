@@ -5,7 +5,7 @@ from generals.NormalQueue import NormalQueue
 
 
 class Policy:
-    __s = ImplementSem()
+    s = ImplementSem()
 
     def __init__(self, head=None):
         """
@@ -15,10 +15,10 @@ class Policy:
         self.nq = NormalQueue(head)
 
     def __str__(self):
-        self.__s.before_reading()
+        self.s.before_reading()
         ris = self.nq.str_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_reading()
+        self.s.after_reading()
         return ris
 
     def empty(self):
