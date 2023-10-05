@@ -4,7 +4,7 @@ import threading
 class RRSem:
     mtx = threading.Semaphore()
     blocked = []                    # list of private semaphores blocked
-    running_after_check = {}                    # true if thread i didn't complete q and it has other operations to do
+    running_after_check = {}        # true if thread i didn't complete q and it has other operations to do
     nt = nb = 0
     stop_event = threading.Event()  # event that stops the checking existence of the running_after_check thread
     idt = 0                         # running_after_check thread id that finished his q
