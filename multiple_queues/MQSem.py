@@ -43,7 +43,7 @@ class MQSem:
                 else:
                     if (self.nb[self.num_queue[i]]) | self.queue_list[self.num_queue[i]].sem.nr | self.queue_list[self.num_queue[i]].sem.nw:
                         block = True
-            if self.active & (self.running_after_check[i] is False):
+            if self.active & (self.running_after_check[i] is False) & (self.num_queue[i] < (self.num_q - 1)):
                 block = True
             if block:
                 self.nb[self.num_queue[i]] += 1

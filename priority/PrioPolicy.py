@@ -33,7 +33,6 @@ class PrioPolicy(Policy):
         return ris
 
     def pop(self, i, prio=sem.def_prio):
-        self.pop.__doc__ = Policy.pop.__doc__
         self.sem.before_writing(i, prio)
         ris = self.nq.pop_not_safe()
         time.sleep(float(random.randint(0, 1000) / 1000))
