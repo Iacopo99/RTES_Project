@@ -36,6 +36,7 @@ class NormalQueue:
         if self.__length:
             self.__length -= 1
             el = self.__head.node
+            del self.__head.node
             self.__head = self.__head.next_node
             return el
         else:
