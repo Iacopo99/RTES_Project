@@ -14,7 +14,6 @@ class RRPolicy(Policy):
         if not multiple_queues:
             super().__init__(head)
         self.q = q
-        self.multiple_queues = multiple_queues
         self.sem = RRSem(q, multiple_queues)
 
     def general_function(self, func, i, node=None):
@@ -31,19 +30,19 @@ class RRPolicy(Policy):
         self.sem.after(t, i)
         return ris
 
-    def empty(self, i=-1):
+    def empty(self, i):
         return self.general_function(self.nq.empty_not_safe, i)
 
-    def get_head(self, i=-1):
+    def get_head(self, i):
         return self.general_function(self.nq.get_head_not_safe, i)
 
-    def get_length(self, i=-1):
+    def get_length(self, i):
         return self.general_function(self.nq.get_length_not_safe, i)
 
-    def pop(self, i=-1):
+    def pop(self, i):
         return self.general_function(self.nq.pop_not_safe, i)
 
-    def push(self, new_node, i=-1):
+    def push(self, i, new_node):
         self.general_function(self.nq.push_not_safe, i, new_node)
 
     def calculate_t(self, i, t):

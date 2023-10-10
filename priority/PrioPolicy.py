@@ -5,38 +5,43 @@ import time
 
 
 class PrioPolicy(Policy):
-    __s = PrioSem()
+    sem = PrioSem()
 
-    def empty(self, i=-1):
-        self.__s.before_reading(i)
+    def __init__(self, head=None, lower_bound=0, upper_bound=4):
+        super().__init__(head)
+        self.sem = PrioSem(lower_bound, upper_bound)
+
+    def empty(self, i):
+        self.sem.before_reading(i)
         ris = self.nq.empty_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_reading()
+        self.sem.after_reading()
         return ris
 
-    def get_head(self, i=-1):
-        self.__s.before_reading(i)
+    def get_head(self, i):
+        self.sem.before_reading(i)
         ris = self.nq.get_head_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_reading()
+        self.sem.after_reading()
         return ris
 
-    def get_length(self, i=-1):
-        self.__s.before_reading(i)
+    def get_length(self, i):
+        self.sem.before_reading(i)
         ris = self.nq.get_length_not_safe()
         time.sleep(float(random.randint(0, 300) / 1000))
-        self.__s.after_reading()
+        self.sem.after_reading()
         return ris
 
-    def pop(self, i=-1, prio=__s.def_prio):
-        self.__s.before_writing(i, prio)
+    def pop(self, i, prio=sem.def_prio):
+        self.pop.__doc__ = Policy.pop.__doc__
+        self.sem.before_writing(i, prio)
         ris = self.nq.pop_not_safe()
         time.sleep(float(random.randint(0, 1000) / 1000))
-        self.__s.after_writing()
+        self.sem.after_writing()
         return ris
 
-    def push(self, new_node, i=-1, prio=__s.def_prio):
-        self.__s.before_writing(i, prio)
+    def push(self, i, new_node, prio=sem.def_prio):
+        self.sem.before_writing(i, prio)
         self.nq.push_not_safe(new_node)
         time.sleep(float(random.randint(0, 1000) / 1000))
-        self.__s.after_writing()
+        self.sem.after_writing()

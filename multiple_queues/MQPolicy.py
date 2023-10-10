@@ -1,7 +1,7 @@
 from fifo.FifoPolicy import FifoPolicy
 from rr.RRPolicy import RRPolicy
 from generals.Policy import Policy
-from gqueues.MQSem import MQSem
+from multiple_queues.MQSem import MQSem
 import time
 import random
 
@@ -49,13 +49,13 @@ class MQPolicy(Policy):
             self.sem.after(i, t, True)
         return ris
 
-    def empty(self, i=-1):
+    def empty(self, i):
         return self.general_reader(self.nq.empty_not_safe, i)
 
-    def get_head(self, i=-1):
+    def get_head(self, i):
         return self.general_reader(self.nq.get_head_not_safe, i)
 
-    def get_length(self, i=-1):
+    def get_length(self, i):
         return self.general_reader(self.nq.get_length_not_safe, i)
 
     def general_writer(self, func, i, node=None):
@@ -81,8 +81,8 @@ class MQPolicy(Policy):
         self.sem.after(i, t)
         return ris
 
-    def pop(self, i=-1):
+    def pop(self, i):
         return self.general_writer(self.nq.pop_not_safe, i)
 
-    def push(self, new_node, i=-1):
+    def push(self, i, new_node):
         self.general_writer(self.nq.push_not_safe, i, new_node)
