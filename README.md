@@ -30,4 +30,5 @@ The parallel acccess of multiple threads to the queue are managed in 4 possible 
 >
 *Multiple Queues*: the object **MQPolicy** accepts a list of q as a parameter and for every q it creates
 a RRPolicy instance and it adds a FifoPolicy at the end. Every thread starts from the queue with the smallest q and if it doesn't complete his tasks it will be assigned to the lower queues.
-  
+ >
+If you want to see some examples check the directory example
