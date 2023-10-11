@@ -9,7 +9,7 @@ class MQSem:
     thread_sem = {}  # semaphore for each thread
     block_on_queue = {}  # list of id threads blocked on every queue
     already_released = False  # check if the thread already released another thread
-    change_t = False
+    change_t = 0
     stop_event = threading.Event()  # event that stops the thread
     idt = 0
     running_after_check = {}    # true if thread i didn't complete q and it has other operations to do
@@ -31,7 +31,7 @@ class MQSem:
             first_pass = True
         if i not in self.running_after_check:
             self.running_after_check[i] = False
-        if self.change_t | first_pass:
+        if (self.change_t == i) | first_pass:
             for c in range(self.num_queue[i]):
                 if ((self.nb[c]) | self.queue_list[c].sem.nb | self.queue_list[c].sem.nt) & (self.running_after_check[i] is False):
                     block = True
@@ -49,7 +49,8 @@ class MQSem:
                 self.nb[self.num_queue[i]] += 1
                 self.block_on_queue[self.num_queue[i]].append(i)
                 print('thread {} BLOCKED on the queue {}'.format(i, self.num_queue[i]))
-            self.change_t = False
+            if self.change_t == i:
+                self.change_t = 0
         if self.running_after_check[i]:
             self.running_after_check[i] = False
             self.stop_event.set()
@@ -81,7 +82,7 @@ class MQSem:
                 find = False
         self.stop_event.clear()
 
-    def realising_higher_queues(self, i, ch= False, read=False):
+    def realising_higher_queues(self, i, ch=False, read=False):
         for c in range(self.num_queue[i]):
             if self.nb[c]:
                 ris = self.block_on_queue[c].pop(0)
@@ -152,7 +153,7 @@ class MQSem:
         self.mtx.release()
 
     def thread_release(self, i, ch=False, read=False):
-        self.change_t = True
+        self.change_t = i
         if not self.realising_higher_queues(i, ch, read):
             if not self.realising_current_queue(i, ch, read):
                 self.realising_lower_queues(i, read)
