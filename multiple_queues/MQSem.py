@@ -81,7 +81,7 @@ class MQSem:
                 find = False
         self.stop_event.clear()
 
-    def realising_higher_queues(self, i):
+    def realising_higher_queues(self, i, ch= False, read=False):
         for c in range(self.num_queue[i]):
             if self.nb[c]:
                 ris = self.block_on_queue[c].pop(0)
@@ -93,6 +93,12 @@ class MQSem:
                 self.queue_list[c].sem.change_runner()
                 self.already_released = True
                 break
+
+        if self.already_released & (self.num_queue[i] == (self.num_q - 1)) & (not ch):
+            if read:
+                self.queue_list[self.num_queue[i]].sem.nr -= 1
+            else:
+                self.queue_list[self.num_queue[i]].sem.nw -= 1
         return self.already_released
 
     def realising_current_queue(self, i, ch=False, read=False):
@@ -106,23 +112,39 @@ class MQSem:
                 self.queue_list[self.num_queue[i]].sem.change_runner()
                 self.already_released = True
 
-        if read & (self.num_queue[i] == (self.num_q - 1)) & (not ch):
-            self.queue_list[self.num_queue[i]].sem.after_reading()
-            self.already_released = True
-        elif (self.num_queue[i] == (self.num_q - 1)) & (not ch):
-            self.queue_list[self.num_queue[i]].sem.after_writing()
-            self.already_released = True
+        if (self.num_queue[i] == (self.num_q - 1)) & (not ch):
+            if read:
+                if (not self.queue_list[self.num_queue[i]].sem.nr) & self.queue_list[self.num_queue[i]].sem.nbw:
+                    self.already_released = True
+                self.queue_list[self.num_queue[i]].sem.after_reading()
+            else:
+                if self.queue_list[self.num_queue[i]].sem.nbr:
+                    self.already_released = True
+                self.queue_list[self.num_queue[i]].sem.after_writing()
         return self.already_released
 
-    def realising_lower_queues(self, i):
+    def realising_lower_queues(self, i, read=False):
         for c in range(self.num_queue[i] + 1, self.num_q):
-            if c < (self.num_q - 1):
-                self.queue_list[c].sem.change_runner()
+            if self.nb[c]:
+                ris = self.block_on_queue[c].pop(0)
+                self.thread_sem[ris].release()
+                self.nb[c] -= 1
+                self.already_released = True
                 break
-            elif (not self.queue_list[c].sem.nr) & self.queue_list[c].sem.nbw:
-                self.queue_list[c].sem.after_reading()
-            elif self.queue_list[c].sem.nbr:
-                self.queue_list[c].sem.after_writing()
+            elif c < (self.num_q - 1):
+                if self.queue_list[c].sem.nb:
+                    self.queue_list[c].sem.change_runner()
+                    self.already_released = True
+                    break
+            elif c == (self.num_q - 1):
+                if read:
+                    if (not self.queue_list[c].sem.nr) & self.queue_list[c].sem.nbw:
+                        self.already_released = True
+                        self.queue_list[c].sem.after_reading()
+                else:
+                    if self.queue_list[c].sem.nbr:
+                        self.already_released = True
+                        self.queue_list[c].sem.after_writing()
 
     def safe_release(self, i):
         self.mtx.acquire()
@@ -131,9 +153,9 @@ class MQSem:
 
     def thread_release(self, i, ch=False, read=False):
         self.change_t = True
-        if not self.realising_higher_queues(i):
+        if not self.realising_higher_queues(i, ch, read):
             if not self.realising_current_queue(i, ch, read):
-                self.realising_lower_queues(i)
+                self.realising_lower_queues(i, read)
         if self.already_released:
             self.already_released = False
             self.active = True
@@ -144,7 +166,7 @@ class MQSem:
         self.mtx.acquire()
         if self.num_queue[i] < (self.num_q - 1):
             if self.change_queue(i, t):
-                self.thread_release(i, True)
+                self.thread_release(i, ch=True)
             else:
                 self.idt = i
                 self.running_after_check[i] = True

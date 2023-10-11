@@ -29,7 +29,7 @@ class MQPolicy(Policy):
     def general_reader(self, func, i):
         if i not in self.sem.num_queue:
             self.sem.num_queue[i] = 0
-        self.sem.before(i)
+        self.sem.before(i, True)
         if self.sem.num_queue[i] != (len(self.queue_list) - 1):
             self.queue_list[self.sem.num_queue[i]].sem.before(i)
         else:
