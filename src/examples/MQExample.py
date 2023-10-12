@@ -1,13 +1,15 @@
 import random
 import threading
 from threading import Thread
-from rr.RRPolicy import RRPolicy
+import time
+from multiple_queues.MQPolicy import MQPolicy
 
 
 def proc(p_fq):
+    n = threading.get_native_id()
+    time.sleep(float(random.randint(0, 1000) / 1000))
     for iter in range(3):
         var = random.randint(0, 4)
-        n = threading.get_native_id()
         if not var:
             print('thread {} trying to do a pop'.format(n))
             ris = p_fq.pop(n)
@@ -28,12 +30,14 @@ def proc(p_fq):
             print('thread {} trying to get the head'.format(n))
             ris = p_fq.get_head(n)
             print('head get by thread {}: {}'.format(n, ris))
+    print('thread {} COMPLETED'.format(n))
 
 
 if __name__ == '__main__':
     t = []
-    pp = RRPolicy(q=0.3)
-    for i in range(5):
+    q = [0.1, 0.2, 0.5]
+    pp = MQPolicy(q)
+    for i in range(20):
         pt = Thread(target=proc, args=[pp])
         t.append(pt)
     for i in t:

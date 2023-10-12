@@ -34,7 +34,7 @@ def proc(p_fq):
 
 if __name__ == '__main__':
     t = []
-    pp = FifoPolicy('ciao')
+    pp = FifoPolicy('head')
     for i in range(10):
         pt = Thread(target=proc, args=[pp])
         t.append(pt)

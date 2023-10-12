@@ -6,7 +6,7 @@ from priority.PrioPolicy import PrioPolicy
 
 def proc(p_fq):
     i = 0
-    pr = random.randint(0, 4)
+    pr = random.randint(2, 10)
     while i in range(3):
         var = random.randint(0, 4)
         n = threading.get_native_id()
@@ -35,8 +35,8 @@ def proc(p_fq):
 
 if __name__ == '__main__':
     t = []
-    pp = PrioPolicy()
-    for i in range(5):
+    pp = PrioPolicy('head', 2, 10)
+    for i in range(15):
         pt = Thread(target=proc, args=[pp])
         t.append(pt)
     for i in t:
