@@ -10,6 +10,11 @@ class MQPolicy(Policy):
     queue_list = []
 
     def __init__(self, list_q, head=None):
+        """
+        Create a queue of elements that multiple threads can modify in a thread-safe mode following the multiple queues policy
+        :param list_q: Contains a list of int numbers and each one is the service period of a round-robin scheduling policy created
+        :param head: If specified insert the first element of the queue. Otherwise the queue created is empty.
+        """
         super().__init__(head)
         exc = False
         if type(list_q) is not list:
@@ -26,7 +31,7 @@ class MQPolicy(Policy):
         print('Fifo Queue created')
         self.sem = MQSem(self.queue_list)
 
-    def general_reader(self, func, i):
+    def __general_reader(self, func, i):
         if i not in self.sem.num_queue:
             self.sem.num_queue[i] = 0
         self.sem.before(i, True)
@@ -50,15 +55,15 @@ class MQPolicy(Policy):
         return ris
 
     def empty(self, i):
-        return self.general_reader(self.nq.empty_not_safe, i)
+        return self.__general_reader(self.nq.empty_not_safe, i)
 
     def get_head(self, i):
-        return self.general_reader(self.nq.get_head_not_safe, i)
+        return self.__general_reader(self.nq.get_head_not_safe, i)
 
     def get_length(self, i):
-        return self.general_reader(self.nq.get_length_not_safe, i)
+        return self.__general_reader(self.nq.get_length_not_safe, i)
 
-    def general_writer(self, func, i, node=None):
+    def __general_writer(self, func, i, node=None):
         if i not in self.sem.num_queue:
             self.sem.num_queue[i] = 0
         self.sem.before(i)
@@ -82,7 +87,7 @@ class MQPolicy(Policy):
         return ris
 
     def pop(self, i):
-        return self.general_writer(self.nq.pop_not_safe, i)
+        return self.__general_writer(self.nq.pop_not_safe, i)
 
     def push(self, i, new_node):
-        self.general_writer(self.nq.push_not_safe, i, new_node)
+        self.__general_writer(self.nq.push_not_safe, i, new_node)

@@ -35,9 +35,9 @@ def proc(p_fq):
 
 if __name__ == '__main__':
     t = []
-    q = [0.1, 0.2, 0.5]
+    q = []
     pp = MQPolicy(q)
-    for i in range(20):
+    for i in range(5):
         pt = Thread(target=proc, args=[pp])
         t.append(pt)
     for i in t:

@@ -11,12 +11,18 @@ class RRPolicy(Policy):
     thread_time = {}
 
     def __init__(self, head=None, q=0.3, multiple_queues=False):
+        """
+        Create a queue of elements that multiple threads can modify in a thread-safe mode following the round-robin policy
+        :param q: It is the period (in sec.) that the cpu serves a task.
+        :param head: If specified insert the first element of the queue. Otherwise the queue created is empty.
+        :param multiple_queues: It is necessary to create a multiple_queue policy. leave at default value
+        """
         if not multiple_queues:
             super().__init__(head)
         self.q = q
         self.sem = RRSem(q, multiple_queues)
 
-    def general_function(self, func, i, node=None):
+    def __general_function(self, func, i, node=None):
         self.sem.before(i)
         start = time.time()
         if node is None:
@@ -31,19 +37,19 @@ class RRPolicy(Policy):
         return ris
 
     def empty(self, i):
-        return self.general_function(self.nq.empty_not_safe, i)
+        return self.__general_function(self.nq.empty_not_safe, i)
 
     def get_head(self, i):
-        return self.general_function(self.nq.get_head_not_safe, i)
+        return self.__general_function(self.nq.get_head_not_safe, i)
 
     def get_length(self, i):
-        return self.general_function(self.nq.get_length_not_safe, i)
+        return self.__general_function(self.nq.get_length_not_safe, i)
 
     def pop(self, i):
-        return self.general_function(self.nq.pop_not_safe, i)
+        return self.__general_function(self.nq.pop_not_safe, i)
 
     def push(self, i, new_node):
-        self.general_function(self.nq.push_not_safe, i, new_node)
+        self.__general_function(self.nq.push_not_safe, i, new_node)
 
     def calculate_t(self, i, t):
         if i in self.thread_time:

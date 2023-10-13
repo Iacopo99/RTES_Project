@@ -36,7 +36,7 @@ def proc(p_fq):
 if __name__ == '__main__':
     t = []
     pp = PrioPolicy('head', 2, 10)
-    for i in range(15):
+    for i in range(5):
         pt = Thread(target=proc, args=[pp])
         t.append(pt)
     for i in t:
