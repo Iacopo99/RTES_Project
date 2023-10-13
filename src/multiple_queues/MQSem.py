@@ -38,10 +38,10 @@ class MQSem:
                     break
             if self.num_queue[i] == (self.num_q - 1):
                 if read:
-                    if (self.nb[self.num_queue[i]]) | self.queue_list[self.num_queue[i]].sem.nbw | self.queue_list[self.num_queue[i]].sem.nw:
+                    if self.nb[self.num_queue[i]] | self.queue_list[self.num_queue[i]].sem.nbw | self.queue_list[self.num_queue[i]].sem.nw:
                         block = True
                 else:
-                    if (self.nb[self.num_queue[i]]) | self.queue_list[self.num_queue[i]].sem.nr | self.queue_list[self.num_queue[i]].sem.nw:
+                    if self.nb[self.num_queue[i]] | self.queue_list[self.num_queue[i]].sem.nr | self.queue_list[self.num_queue[i]].sem.nw:
                         block = True
             if self.active & (self.running_after_check[i] is False) & (self.num_queue[i] < (self.num_q - 1)):
                 block = True
@@ -59,6 +59,22 @@ class MQSem:
             self.active = True
         self.mtx.release()
         self.thread_sem[i].acquire()
+
+    def after(self, i, t=-1, read=False):
+        self.mtx.acquire()
+        if self.num_queue[i] < (self.num_q - 1):
+            if self.change_queue(i, t):
+                self.thread_release(i, ch=True)
+            else:
+                self.idt = i
+                self.running_after_check[i] = True
+                try:
+                    threading.Thread(target=self.check_ending_thread).start()
+                except Exception:
+                    raise RuntimeError('ERROR starting checking thread')
+        else:
+            self.thread_release(i, read=read)
+        self.mtx.release()
 
     def change_queue(self, i, t):
         if self.num_queue[i] < (self.num_q - 1):
@@ -162,19 +178,3 @@ class MQSem:
             self.active = True
         else:
             self.active = False
-
-    def after(self, i, t=-1, read=False):
-        self.mtx.acquire()
-        if self.num_queue[i] < (self.num_q - 1):
-            if self.change_queue(i, t):
-                self.thread_release(i, ch=True)
-            else:
-                self.idt = i
-                self.running_after_check[i] = True
-                try:
-                    threading.Thread(target=self.check_ending_thread).start()
-                except Exception:
-                    raise RuntimeError('ERROR starting checking thread')
-        else:
-            self.thread_release(i, read=read)
-        self.mtx.release()

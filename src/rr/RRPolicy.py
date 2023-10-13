@@ -12,10 +12,10 @@ class RRPolicy(Policy):
 
     def __init__(self, head=None, q=0.3, multiple_queues=False):
         """
-        Create a queue of elements that multiple threads can modify in a thread-safe mode following the round-robin policy
+        Create a queue of elements that multiple threads can modify in a thread-safe mode following the round-robin policy.\n
         :param q: It is the period (in sec.) that the cpu serves a task.
         :param head: If specified insert the first element of the queue. Otherwise the queue created is empty.
-        :param multiple_queues: It is necessary to create a multiple_queue policy. leave at default value
+        :param multiple_queues: It is necessary to create a multiple_queue policy. leave at default value.
         """
         if not multiple_queues:
             super().__init__(head)

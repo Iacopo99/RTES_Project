@@ -9,7 +9,7 @@ class FifoPolicy(Policy):
 
     def __init__(self, head=None):
         """
-        Create a queue of elements that multiple threads can modify in a thread-safe mode following the Fifo scheduling policy
+        Create a queue of elements that multiple threads can modify in a thread-safe mode following the Fifo scheduling policy.\n
         :param head: If specified insert the first element of the queue. Otherwise the queue created is empty.
         """
         super().__init__(head)

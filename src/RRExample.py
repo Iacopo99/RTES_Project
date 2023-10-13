@@ -17,7 +17,7 @@ def proc(p_fq):
             p_fq.push(n, n)
             print('push {} done'.format(n))
         elif var == 2:
-            print('thread {} trying to reading the data'.format(n))
+            print('thread {} trying to get the length of the queue'.format(n))
             ris = p_fq.get_length(n)
             print('length get by the thread {} : {}'.format(n, ris))
         elif var == 3:
@@ -32,7 +32,7 @@ def proc(p_fq):
 
 if __name__ == '__main__':
     t = []
-    pp = RRPolicy(head='first', q=0.3)
+    pp = RRPolicy(head='first', q=0.2)
     for i in range(5):
         pt = Thread(target=proc, args=[pp])
         t.append(pt)

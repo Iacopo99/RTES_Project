@@ -9,7 +9,7 @@ class PrioPolicy(Policy):
 
     def __init__(self, head=None, lower_bound=0, upper_bound=4):
         """
-        Create a queue of elements that multiple threads can modify in a thread-safe mode following the static priority policy
+        Create a queue of elements that multiple threads can modify in a thread-safe mode following the static priority policy.\n
         :param head: If specified insert the first element of the queue. Otherwise the queue created is empty.
         :param lower_bound: An int number containing the highest priority to assign (the lowest number)
         :param upper_bound: An int number containing the lowest priority to assign (the highest number)

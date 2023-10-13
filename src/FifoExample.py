@@ -18,7 +18,7 @@ def proc(p_fq):
             ris = p_fq.push(n, n)
             print('push {} done'.format(n))
         elif var == 2:
-            print('thread {} trying to reading the data'.format(n))
+            print('thread {} trying to get the length of the queue'.format(n))
             ris = p_fq.get_length(n)
             print('length get by the thread {} : {}'.format(n, ris))
         elif var == 3:
