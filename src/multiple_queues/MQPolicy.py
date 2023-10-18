@@ -26,7 +26,7 @@ class MQPolicy(Policy):
             raise ValueError('parameter list_q must be a list of int')
         for q in sorted(set(list_q)):
             self.queue_list.append(RRPolicy(q=q, multiple_queues=True))
-            print('Queue created: q = {}'.format(q))
+            print('Round Robin Queue created: q = {}'.format(q))
         self.queue_list.append(FifoPolicy())
         print('Fifo Queue created')
         self.sem = MQSem(self.queue_list)

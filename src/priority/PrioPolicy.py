@@ -15,6 +15,8 @@ class PrioPolicy(Policy):
         :param upper_bound: An int number containing the lowest priority to assign (the highest number)
         """
         super().__init__(head)
+        if (lower_bound < 0) | (upper_bound < 0) | (upper_bound < lower_bound):
+            raise ValueError('incorrect priority range!')
         self.sem = PrioSem(lower_bound, upper_bound)
 
     def __general_reader(self, func, i):
