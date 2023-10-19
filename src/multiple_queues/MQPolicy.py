@@ -9,7 +9,7 @@ import random
 class MQPolicy(Policy):
     queue_list = []
 
-    def __init__(self, list_q, head=None):
+    def __init__(self, list_q: list, head=None):
         """
         Create a queue of elements that multiple threads can modify in a thread-safe mode following the multiple queues policy.\n
         :param list_q: Contains a list of int numbers and each one is the service period of a round-robin scheduling policy created.
